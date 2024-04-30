@@ -15,7 +15,7 @@ client = OpenAI(api_key=OPEN_AI_API_KEY)
 # Define the Streamlit app structure
 def main():
     # Set the title of the app
-    st.title("Quiz Generator")
+    st.title("Coding Quiz Generator")
 
     # Add a header for quiz parameters
     st.header("Quiz Parameters")
@@ -35,59 +35,8 @@ def generate_quiz(quiz_type, coding_subject):
     st.subheader("Quiz Type: " + quiz_type)
     st.subheader("Coding Subject: " + coding_subject)
 
-    # Add logic to generate quiz questions based on the selected parameters
-    if quiz_type == "Multiple Choice":
-        # Generate a multiple choice question
-        question = generate_multiple_choice_question(coding_subject)
-        # Display the question
-        st.write("Question:", question)
-        # Get the user's answer
-        user_answer = st.text_input("Your Answer")
-        # Compare the user's answer to the correct answer
-        correct_answer = get_correct_answer(question)
-        # Evaluate the answer and return a score
-        score = evaluate_answer(user_answer, correct_answer)
-        st.write("Score:", score)
-    # elif quiz_type == "Coding Exercise":
-    #     # Generate a coding exercise question
-    #     question = generate_coding_exercise_question(coding_subject)
-    #     # Display the question
-    #     st.write("Question:", question)
-    #     # Get the user's answer
-    #     user_answer = st.text_area("Your Answer")
-    #     # Compare the user's answer to the correct answer
-    #     correct_answer = get_correct_answer(question)
-    #     # Evaluate the answer and return a score
-    #     score = evaluate_answer(user_answer, correct_answer)
-    #     st.write("Score:", score)
-    # elif quiz_type == "Bug Fixing":
-    #     # Generate a bug fixing question
-    #     question = generate_bug_fixing_question(coding_subject)
-    #     # Display the question
-    #     st.write("Question:", question)
-    #     # Get the user's answer
-    #     user_answer = st.text_area("Your Answer")
-    #     # Compare the user's answer to the correct answer
-    #     correct_answer = get_correct_answer(question)
-    #     # Evaluate the answer and return a score
-    #     score = evaluate_answer(user_answer, correct_answer)
-    #     st.write("Score:", score)
-    # elif quiz_type == "Definitions":
-    #     # Generate a definitions question
-    #     question = generate_definitions_question(coding_subject)
-    #     # Display the question
-    #     st.write("Question:", question)
-    #     # Get the user's answer
-    #     user_answer = st.text_input("Your Answer")
-    #     # Compare the user's answer to the correct answer
-    #     correct_answer = get_correct_answer(question)
-    #     # Evaluate the answer and return a score
-    #     score = evaluate_answer(user_answer, correct_answer)
-    #     st.write("Score:", score)
-    else:
-        st.write("Invalid quiz type selected")
 
-    # Define functions to generate questions, get correct answers, and evaluate answers
+# Define functions to generate questions, get correct answers, and evaluate answers
 
     def generate_multiple_choice_question(coding_subject):
         response = client.Completions.create(
@@ -100,30 +49,42 @@ def generate_quiz(quiz_type, coding_subject):
         )
         question = response.choices[0].text.strip()
         return question
+
+    def generate_coding_exercise_question(coding_subject):
+        response = client.Completions.create(
+            engine="davinci-codex",
+            prompt=f"Generate a coding exercise question for the coding subject: {coding_subject}",
+            max_tokens=100,
+            n=1,
+            stop=None,
+            temperature=0.7,
+        )
+        question = response.choices[0].text.strip()
+        return question
         
-    # def generate_bug_fixing_question(coding_subject):
-    #     response = client.Completions.create(
-    #         engine="davinci-codex",
-    #         prompt=f"Generate a bug fixing question for the coding subject: {coding_subject}",
-    #         max_tokens=100,
-    #         n=1,
-    #         stop=None,
-    #         temperature=0.7,
-    #     )
-    #     question = response.choices[0].text.strip()
-    #     return question
+    def generate_bug_fixing_question(coding_subject):
+        response = client.Completions.create(
+            engine="davinci-codex",
+            prompt=f"Generate a bug fixing question for the coding subject: {coding_subject}",
+            max_tokens=100,
+            n=1,
+            stop=None,
+            temperature=0.7,
+        )
+        question = response.choices[0].text.strip()
+        return question
     
-    # def generate_definitions_question(coding_subject):
-    #     response = client.Completions.create(
-    #         engine="davinci-codex",
-    #         prompt=f"Generate a bug fixing question for the coding subject: {coding_subject}",
-    #         max_tokens=100,
-    #         n=1,
-    #         stop=None,
-    #         temperature=0.7,
-    #     )
-    #     question = response.choices[0].text.strip()
-    #     return question
+    def generate_definitions_question(coding_subject):
+        response = client.Completions.create(
+            engine="davinci-codex",
+            prompt=f"Generate a bug fixing question for the coding subject: {coding_subject}",
+            max_tokens=100,
+            n=1,
+            stop=None,
+            temperature=0.7,
+        )
+        question = response.choices[0].text.strip()
+        return question
 
     # Answer comparrison
 
@@ -147,3 +108,63 @@ def generate_quiz(quiz_type, coding_subject):
         else:
             score = 0
         return score
+    
+
+
+
+
+
+    # Add logic to generate quiz questions based on the selected parameters
+    if quiz_type == "Multiple Choice":
+        # Generate a multiple choice question
+        question = generate_multiple_choice_question(coding_subject)
+        # Display the question
+        st.write("Question:", question)
+        # Get the user's answer
+        user_answer = st.text_input("Your Answer")
+        # Compare the user's answer to the correct answer
+        correct_answer = get_correct_answer(question)
+        # Evaluate the answer and return a score
+        score = evaluate_answer(user_answer, correct_answer)
+        st.write("Score:", score)
+    elif quiz_type == "Coding Exercise":
+        # Generate a coding exercise question
+        question = generate_coding_exercise_question(coding_subject)
+        # Display the question
+        st.write("Question:", question)
+        # Get the user's answer
+        user_answer = st.text_area("Your Answer")
+        # Compare the user's answer to the correct answer
+        correct_answer = get_correct_answer(question)
+        # Evaluate the answer and return a score
+        score = evaluate_answer(user_answer, correct_answer)
+        st.write("Score:", score)
+    elif quiz_type == "Bug Fixing":
+        # Generate a bug fixing question
+        question = generate_bug_fixing_question(coding_subject)
+        # Display the question
+        st.write("Question:", question)
+        # Get the user's answer
+        user_answer = st.text_area("Your Answer")
+        # Compare the user's answer to the correct answer
+        correct_answer = get_correct_answer(question)
+        # Evaluate the answer and return a score
+        score = evaluate_answer(user_answer, correct_answer)
+        st.write("Score:", score)
+    elif quiz_type == "Definitions":
+        # Generate a definitions question
+        question = generate_definitions_question(coding_subject)
+        # Display the question
+        st.write("Question:", question)
+        # Get the user's answer
+        user_answer = st.text_input("Your Answer")
+        # Compare the user's answer to the correct answer
+        correct_answer = get_correct_answer(question)
+        # Evaluate the answer and return a score
+        score = evaluate_answer(user_answer, correct_answer)
+        st.write("Score:", score)
+    else:
+        st.write("Invalid quiz type selected")
+    
+if __name__ == "__main__":
+    main()
