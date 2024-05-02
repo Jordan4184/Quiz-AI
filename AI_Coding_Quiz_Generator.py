@@ -92,3 +92,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#Question Difficulty Levels: Adding difficulty levels to the quiz questions could make the app more appealing to users of different skill levels.
