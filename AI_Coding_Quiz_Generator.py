@@ -93,4 +93,6 @@ def main():
 if __name__ == "__main__":
     main()
 
+#Add text input fucntionality for answers so that the AI can take the answer input compare it to its answer and return a level of correctness with comments about correcting it. 
+
 #Question Difficulty Levels: Adding difficulty levels to the quiz questions could make the app more appealing to users of different skill levels.
