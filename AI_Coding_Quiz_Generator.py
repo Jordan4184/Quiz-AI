@@ -17,9 +17,12 @@ client = OpenAI(api_key=OPEN_AI_API_KEY)
 
 # Define the function to generate quiz questions and answers
 def generate_quiz_question(quiz_type, coding_subject):
-    system_prompt = "You are a computer programing and coding quiz generator. Please generate a quiz question and provide a clear, separate answer in a plain text format without any formatting."
-    user_prompt = f"Create a detailed {quiz_type.lower()} question specifically about {coding_subject} and clearly separate the answer by stating 'Answer:' immediately following the question. Indicate the correct answer by returning only its letter (e.g., 'A', 'B', 'C', or 'D') not the entire answer. For example, 'A) Prints numbers from 0 to 4' is the entire answer, I only want you to return the letter 'A'. Do not use any special formatting like bold or italics."
-
+    system_prompt = "You are a creative and diverse computer programming and coding quiz generator."
+    user_prompt = (
+        f"Create a unique and detailed {quiz_type.lower()} question specifically about {coding_subject}. "
+        "The answer should be clearly separated by stating 'Answer:' immediately following the question. "
+        "Indicate the correct answer clearly. Avoid repetitive questions."
+    )
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt}
@@ -29,21 +32,17 @@ def generate_quiz_question(quiz_type, coding_subject):
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
-            max_tokens=250  # Increased tokens in case of longer questions
+            max_tokens=350
         )
-        print("API Response:", response.choices[0].message.content)
-
         content = response.choices[0].message.content.strip()
-        # Update to handle possible bold markers or other formatting issues
-        answer_keyword = "**Answer:**"
-        if answer_keyword in content:
-            split_content = content.split(answer_keyword)
-        else:
-            answer_keyword = "Answer:"
-            split_content = content.split(answer_keyword)
+        answer_keyword = "Answer:"
+        split_content = content.split(answer_keyword)
 
+        # Debugging: Print the response content
+        print("API Response:", content)
+        
         if len(split_content) == 2:
-            question = split_content[0].replace("**", "").strip()  # Clean up any residual bold markers
+            question = split_content[0].replace("**", "").strip()
             answer = split_content[1].strip()
             return question, answer
         else:
@@ -53,6 +52,31 @@ def generate_quiz_question(quiz_type, coding_subject):
         st.error(f"Failed to generate question: {str(e)}")
         return "Error generating question", None
 
+
+# Define a function to evaluate the user's answer using OpenAI
+def evaluate_answer(user_answer, correct_answer, quiz_type):
+    evaluation_prompt = (
+        f"Evaluate how correct the answer '{user_answer}' is for a {quiz_type.lower()} question with the correct answer '{correct_answer}'. "
+        "Consider partial correctness and provide constructive feedback on which parts are correct and which parts are incorrect. "
+        "Provide a clear 'Yes' or 'No' at the end to indicate if the answer is mostly correct."
+    )
+    messages = [
+        {"role": "user", "content": evaluation_prompt}
+    ]
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=messages,
+            max_tokens=250  # Allow for a more verbose response
+        )
+        evaluation_content = response.choices[0].message.content.strip().split("\n")
+        feedback = "\n".join(evaluation_content[:-1]).strip()
+        evaluation = evaluation_content[-1].strip().lower()
+        return evaluation == "yes", feedback
+    except Exception as e:
+        st.error(f"Failed to evaluate the answer: {str(e)}")
+        return False, str(e)
 
 
 # Define the Streamlit app structure
@@ -78,21 +102,25 @@ def main():
     if 'question' in st.session_state and st.session_state.question != "Error in API response format, please try again.":
         st.subheader("Question")
         st.write(st.session_state.question)
-        user_answer = st.text_input("Your Answer", key="user_answer")
+        
+        if quiz_type == "Coding Exercise":
+            user_answer = st.text_area("Your Answer", key="user_answer")
+        else:
+            user_answer = st.text_input("Your Answer", key="user_answer")
 
         if st.button("Submit Answer"):
             st.session_state.attempts += 1  # Increment attempts whenever an answer is submitted
-            if user_answer.upper().strip() == st.session_state.correct_answer.upper().strip():
+            is_correct, feedback = evaluate_answer(user_answer, st.session_state.correct_answer, quiz_type)
+            if is_correct:
                 st.success("Correct!")
                 st.session_state.score += 1  # Update score if correct
             else:
-                st.error(f"Incorrect. The correct answer is {st.session_state.correct_answer}")
+                st.error(f"Incorrect. {feedback}. The correct answer is {st.session_state.correct_answer}")
 
             st.subheader(f"Score: {st.session_state.score}/{st.session_state.attempts} correct")  # Display the updated score
 
 if __name__ == "__main__":
     main()
 
-#Add text input fucntionality for answers so that the AI can take the answer input compare it to its answer and return a level of correctness with comments about correcting it. 
-
 #Question Difficulty Levels: Adding difficulty levels to the quiz questions could make the app more appealing to users of different skill levels.
+
