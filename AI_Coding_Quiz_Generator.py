@@ -16,10 +16,10 @@ if OPEN_AI_API_KEY is None:
 client = OpenAI(api_key=OPEN_AI_API_KEY)
 
 # Define the function to generate quiz questions and answers
-def generate_quiz_question(quiz_type, coding_subject):
+def generate_quiz_question(quiz_type, coding_subject, difficulty):
     system_prompt = "You are a creative and diverse computer programming and coding quiz generator."
     user_prompt = (
-        f"Create a unique and detailed {quiz_type.lower()} question specifically about {coding_subject}. "
+        f"Create a unique and detailed {difficulty.lower()} {quiz_type.lower()} question specifically about {coding_subject}. "
         "The answer should be clearly separated by stating 'Answer:' immediately following the question. "
         "Indicate the correct answer clearly. Avoid repetitive questions."
     )
@@ -38,9 +38,6 @@ def generate_quiz_question(quiz_type, coding_subject):
         answer_keyword = "Answer:"
         split_content = content.split(answer_keyword)
 
-        # Debugging: Print the response content
-        print("API Response:", content)
-        
         if len(split_content) == 2:
             question = split_content[0].replace("**", "").strip()
             answer = split_content[1].strip()
@@ -57,8 +54,10 @@ def generate_quiz_question(quiz_type, coding_subject):
 def evaluate_answer(user_answer, correct_answer, quiz_type):
     evaluation_prompt = (
         f"Evaluate how correct the answer '{user_answer}' is for a {quiz_type.lower()} question with the correct answer '{correct_answer}'. "
-        "Consider partial correctness and provide constructive feedback on which parts are correct and which parts are incorrect. "
+        "Consider partial correctness and provide feedback on which parts are correct and which parts are incorrect. "
         "Provide a clear 'Yes' or 'No' at the end to indicate if the answer is mostly correct."
+        "Avoid repeating the question in the evaluation. Keep the evaluation concise. Provide a code example if relevant."
+        "If the answer is multiple choice, the user does not need to include explanation with the answer and providing a single letter answer is acceptable (e.g., 'A')."
     )
     messages = [
         {"role": "user", "content": evaluation_prompt}
@@ -92,9 +91,10 @@ def main():
 
     coding_subject = st.text_input("Enter Coding Subject")
     quiz_type = st.selectbox("Select Quiz Type", ["Multiple Choice", "Coding Exercise", "Bug Fixing", "Definitions"])
-    
+    difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
+
     if st.button("Generate Quiz"):
-        question, correct_answer = generate_quiz_question(quiz_type, coding_subject)
+        question, correct_answer = generate_quiz_question(quiz_type, coding_subject, difficulty)
         st.session_state.question = question
         st.session_state.correct_answer = correct_answer
         st.session_state.user_answer = ""  # Clear previous answers when a new question is generated
@@ -122,5 +122,24 @@ def main():
 if __name__ == "__main__":
     main()
 
-#Question Difficulty Levels: Adding difficulty levels to the quiz questions could make the app more appealing to users of different skill levels.
+#README.md
+
+#AI Coding Quiz Generator
+
+#The code above is a Streamlit app that generates coding quiz questions and evaluates user answers using the OpenAI API.
+#The app allows users to input a coding subject, select a quiz type (e.g., multiple choice, coding exercise), and choose a difficulty level.
+#When the user clicks the "Generate Quiz" button, the app generates a quiz question based on the user inputs.
+#The user can then input their answer and click the "Submit Answer" button to evaluate their response.
+#The app uses the OpenAI API to generate quiz questions and evaluate user answers based on the correct answer.
+#The user's score and number of attempts are displayed after each question.
+#The app provides feedback on whether the user's answer is correct or incorrect and displays the correct answer.
+#The app also provides feedback on the user's answer, including partial correctness and areas of improvement.
+#The user can continue answering questions and see their updated score and number of attempts after each question.
+
+
+#Functionality changes: 
+
+#Adjust prompt engineering to better guide the model in generating questions
+#Need to adjust answer prompts to accept multiple choice questions and coding questions with more forgiving evaluation
+#Add more error handling and user feedback for better user experience
 
