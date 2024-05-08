@@ -139,7 +139,12 @@ if __name__ == "__main__":
 
 #Functionality changes: 
 
+#Add README.md 
+
 #Adjust prompt engineering to better guide the model in generating questions
 #Need to adjust answer prompts to accept multiple choice questions and coding questions with more forgiving evaluation
 #Add more error handling and user feedback for better user experience
+#Add more quiz types and difficulty levels for a more diverse set of questions
+#Add a timer for each question to make the quiz more challenging
+#Add a feature to save and share quiz results
 
