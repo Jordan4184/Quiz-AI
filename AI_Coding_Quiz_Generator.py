@@ -148,4 +148,5 @@ if __name__ == "__main__":
 #Add a timer for each question to make the quiz more challenging
 #Add a feature to save and share quiz results
 #Add a feature to review past quiz questions and answers
+#Add a feature to create custom quizzes based on user preferences
 
