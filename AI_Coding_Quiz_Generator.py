@@ -122,21 +122,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-#README.md
-
-#AI Coding Quiz Generator
-
-#The code above is a Streamlit app that generates coding quiz questions and evaluates user answers using the OpenAI API.
-#The app allows users to input a coding subject, select a quiz type (e.g., multiple choice, coding exercise), and choose a difficulty level.
-#When the user clicks the "Generate Quiz" button, the app generates a quiz question based on the user inputs.
-#The user can then input their answer and click the "Submit Answer" button to evaluate their response.
-#The app uses the OpenAI API to generate quiz questions and evaluate user answers based on the correct answer.
-#The user's score and number of attempts are displayed after each question.
-#The app provides feedback on whether the user's answer is correct or incorrect and displays the correct answer.
-#The app also provides feedback on the user's answer, including partial correctness and areas of improvement.
-#The user can continue answering questions and see their updated score and number of attempts after each question.
-
-
 #Functionality changes: 
 
 #Adjust prompt engineering to better guide the model in generating questions
