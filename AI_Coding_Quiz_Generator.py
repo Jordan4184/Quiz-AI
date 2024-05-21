@@ -127,7 +127,6 @@ if __name__ == "__main__":
 #Adjust prompt engineering to better guide the model in generating questions
 #Need to adjust answer prompts to accept multiple choice questions and coding questions with more forgiving evaluation
 #Add more error handling and user feedback for better user experience
-#Add a timer for each question to make the quiz more challenging
 #Add a feature to save and share quiz results
 #Add a feature to review past quiz questions and answers
 #Add a feature to create custom quizzes based on user preferences
