@@ -74,6 +74,8 @@ This project is a Streamlit app that generates coding quiz questions and evaluat
 - Add a feature to save and share quiz results.
 - Add a feature to review past quiz questions and answers.
 - Add a feature to create custom quizzes based on user preferences.
+
+- ## Acknowledgments
 - [Streamlit](https://streamlit.io/)
 - [OpenAI](https://openai.com/)
 - [dotenv](https://github.com/theskumar/python-dotenv)
