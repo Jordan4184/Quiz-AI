@@ -77,6 +77,6 @@ This project is a Streamlit app that generates coding quiz questions and evaluat
 
 - ## Acknowledgments
 - [Streamlit](https://streamlit.io/)
-- [OpenAI](https://openai.com/)
+- [OpenAI](https://openai.com/) For providing primary code body and architecture, as well as integration to streamlit
 - [dotenv](https://github.com/theskumar/python-dotenv)
 - [Metapub](https://github.com/metapub/metapub)
